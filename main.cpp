@@ -84,13 +84,13 @@ void output(int indent_a, int indent_b, bool choice, program_book OBJ, cookery_b
 	cout << space_f(indent_a) << str;
 	if (var == 0) {
 		cout << space_f(indent_b) << "|--" << OBJ.get_name() << " | " << OBJ.get_param() << " | " 
-												<< OBJ.get_barcode() << "   | " << OBJ.get_pages() << " | " << OBJ.get_price() << " |" << endl;
+				<< OBJ.get_barcode() << "   | " << OBJ.get_pages() << " | " << OBJ.get_price() << " |" << endl;
 	} else if (var == 1) {
 		cout << space_f(indent_b) << "|--" << OBJ1.get_name() << " | " << OBJ1.get_param() << " | " 
-												<< OBJ1.get_barcode() << " | " << OBJ1.get_pages() << " | " << OBJ1.get_price() << " |" << endl;
+				<< OBJ1.get_barcode() << " | " << OBJ1.get_pages() << " | " << OBJ1.get_price() << " |" << endl;
 	} else if (var == 2) {
 		cout << space_f(indent_b) << "|--" << OBJ2.get_name() << " | " << OBJ2.get_param() << " | " 
-												<< OBJ2.get_barcode() << " | " << OBJ2.get_pages() << " | " << OBJ2.get_price() << " |" << endl;
+				<< OBJ2.get_barcode() << " | " << OBJ2.get_pages() << " | " << OBJ2.get_price() << " |" << endl;
 	}
 
 }
@@ -115,7 +115,7 @@ void print_disk_data(disk *OBJ3) {
 		for (int i = 0; i < count_disk; ++i) {
 			cout << space_f(20) << "|" << endl;
 			cout << space_f(20) << "|--" << OBJ3[i].get_name() << " | " << OBJ3[i].get_type_disk() << " | " 
-													<< OBJ3[i].get_barcode() << " | " << OBJ3[i].get_content() << " | " << OBJ3[i].get_price() << endl;
+					<< OBJ3[i].get_barcode() << " | " << OBJ3[i].get_content() << " | " << OBJ3[i].get_price() << endl;
 		}
 }
 
