@@ -75,26 +75,6 @@ class esoterics_book : public book {
     int get_param() { return minimum_age; }
 };
 
-void output(int indent_a, int indent_b, bool choice, program_book OBJ, cookery_book OBJ1, esoterics_book OBJ2, int var) {
-    char str[BUF_SIZE] = "|     |", str1[BUF_SIZE] = "|";
-	if (choice == false)
-		strcpy(str, str1);
-	cout << space_f(indent_a) << str;
-	cout << space_f(indent_b) << str1 << endl;
-	cout << space_f(indent_a) << str;
-	if (var == 0) {
-		cout << space_f(indent_b) << "|--" << OBJ.get_name() << " | " << OBJ.get_param() << " | " 
-				<< OBJ.get_barcode() << "   | " << OBJ.get_pages() << " | " << OBJ.get_price() << " |" << endl;
-	} else if (var == 1) {
-		cout << space_f(indent_b) << "|--" << OBJ1.get_name() << " | " << OBJ1.get_param() << " | " 
-				<< OBJ1.get_barcode() << " | " << OBJ1.get_pages() << " | " << OBJ1.get_price() << " |" << endl;
-	} else if (var == 2) {
-		cout << space_f(indent_b) << "|--" << OBJ2.get_name() << " | " << OBJ2.get_param() << " | " 
-				<< OBJ2.get_barcode() << " | " << OBJ2.get_pages() << " | " << OBJ2.get_price() << " |" << endl;
-	}
-
-}
-
 class disk : public product {
 	char type_disk[BUF_SIZE];
 	char content[BUF_SIZE];
@@ -111,32 +91,38 @@ class disk : public product {
 };
 
 struct object_struct {
-    program_book *object_program;
-    program_book array_book_prog[20];
-    cookery_book *object_cookery;
-    esoterics_book *object_esoterics;
-    disk *object_disk;
+    program_book array_prog[20];
+    cookery_book array_cook[20];
+    esoterics_book array_esot[20];
+    disk array_disk[20];
 };
 
-void output_test(int indent_a, int indent_b, bool choice, program_book testing) {
+void output(int indent_a, int indent_b, bool choice, object_struct object, int count, int var) {
     char str[BUF_SIZE] = "|     |", str1[BUF_SIZE] = "|";
     if (choice == false)
         strcpy(str, str1);
     cout << space_f(indent_a) << str;
     cout << space_f(indent_b) << str1 << endl;
     cout << space_f(indent_a) << str;
-    cout << space_f(indent_b) << "|--" << testing.get_name() << " | " << testing.get_param() << " | " 
-                << testing.get_barcode() << "   | " << testing.get_pages() << " | " << testing.get_price() << " |" << endl;
-    /*if (var == 0) {
-        cout << space_f(indent_b) << "|--" << OBJ.get_name() << " | " << OBJ.get_param() << " | " 
-                << OBJ.get_barcode() << "   | " << OBJ.get_pages() << " | " << OBJ.get_price() << " |" << endl;
+    if (var == 0) {
+        cout << space_f(indent_b) << "|--" << object.array_prog[count].get_name() << " | "
+             << object.array_prog[count].get_param() << " | " 
+             << object.array_prog[count].get_barcode() << "   | "
+             << object.array_prog[count].get_pages() << " | "
+             << object.array_prog[count].get_price() << " |" << endl;
     } else if (var == 1) {
-        cout << space_f(indent_b) << "|--" << OBJ1.get_name() << " | " << OBJ1.get_param() << " | " 
-                << OBJ1.get_barcode() << " | " << OBJ1.get_pages() << " | " << OBJ1.get_price() << " |" << endl;
+        cout << space_f(indent_b) << "|--" << object.array_cook[count].get_name() << " | "
+             << object.array_cook[count].get_param() << " | " 
+             << object.array_cook[count].get_barcode() << " | "
+             << object.array_cook[count].get_pages() << " | "
+             << object.array_cook[count].get_price() << " |" << endl;
     } else if (var == 2) {
-        cout << space_f(indent_b) << "|--" << OBJ2.get_name() << " | " << OBJ2.get_param() << " | " 
-                << OBJ2.get_barcode() << " | " << OBJ2.get_pages() << " | " << OBJ2.get_price() << " |" << endl;
-    }*/
+        cout << space_f(indent_b) << "|--" << object.array_esot[count].get_name() << " | "
+             << object.array_esot[count].get_param() << " | " 
+             << object.array_esot[count].get_barcode() << " | "
+             << object.array_esot[count].get_pages() << " | "
+             << object.array_esot[count].get_price() << " |" << endl;
+    }
 
 }
 
@@ -159,9 +145,7 @@ void inform_about_branch(int indent_a, int indent_b, char *title_str, char *data
 		<< "Штрих-код | " << "Кол-во страниц | " << "Цена |" << endl;
 }
 
-void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, disk *OBJ3, object_struct first) {
-
-    cout << "+++++++++++++++" << first.array_book_prog[count_prog - 2].get_name() << endl;
+void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, disk *OBJ3, object_struct base_object) {
 
 	cout << "Каталог товаров:" << "\n" << space_f(13) << "|" << "\n"
 			<< space_f(13) << "|--" << "Книги:" << endl;
@@ -170,10 +154,9 @@ void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, di
 	inform_about_branch(13, 20, str_title, str_data);
 	for (int i = 0; i < count_prog; ++i) {
 		if (count_cook == 0 && count_esot == 0) {
-			output(13, 26, false, OBJ[i], OBJ1[i], OBJ2[i], 0);
+            output(13, 20, false, base_object, i, 0);
 		} else {
-			output(13, 20, true, OBJ[i], OBJ1[i], OBJ2[i], 0);
-            output_test(13, 20, true, first.array_book_prog[i]);
+            output(13, 20, true, base_object, i, 0);
 		}
 	}
 	if (count_cook == 0) {
@@ -185,9 +168,9 @@ void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, di
 		inform_about_branch(13,  13, str_title, str_data);
 		for (int i = 0; i < count_cook; ++i) {
 			if (count_esot == 0) {
-				output(13, 19, false, OBJ[i], OBJ1[i], OBJ2[i], 1);
+				output(13, 19, false, base_object, i, 1);
             } else {
-                output(13, 13, true, OBJ[i], OBJ1[i], OBJ2[i], 1);
+                output(13, 13, true, base_object, i, 1);
             }
         }
     }
@@ -198,7 +181,7 @@ void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, di
         strcpy(str_data, "Возраст | ");
         inform_about_branch(13,  13, str_title, str_data);
         for (int i = 0; i < count_esot; ++i)
-            output(13, 19, false, OBJ[i], OBJ1[i], OBJ2[i], 2);
+            output(13, 19, false, base_object, i, 2);
         print_disk_data(OBJ3);
     }
 }
@@ -207,7 +190,7 @@ int main() {
     int count = 0;
     char buff[BUF_SIZE][BUF_SIZE];
     ifstream input_file("input.txt");
-    object_struct test_array;
+    object_struct base_object;
     program_book prog_array[20];
     cookery_book cook_array[20];
     esoterics_book esot_array[20];
@@ -218,27 +201,29 @@ int main() {
         if(count == 10) {
             if (strcmp(buff[4],"NONE")) {
                 prog_array[count_prog].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[4]);
-                test_array.array_book_prog[count_prog].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[4]);
+                base_object.array_prog[count_prog].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[4]);
                 ++count_prog;
             }
             if (strcmp(buff[5],"NONE")) {
                 cook_array[count_cook].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[5]);
+                base_object.array_cook[count_cook].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[5]);
                 ++count_cook;
             }
             if (strcmp(buff[6],"NONE")) {
                 esot_array[count_esot].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), atoi(buff[6]));
+                base_object.array_esot[count_esot].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), atoi(buff[6]));
                 ++count_esot;
             }
             if (strcmp(buff[7],"NONE")) {
                 disk_array[count_disk].set_param(buff[0], buff[1], atoi(buff[2]), buff[7], buff[8]);
+                base_object.array_disk[count_disk].set_param(buff[0], buff[1], atoi(buff[2]), buff[7], buff[8]);
                 ++count_disk;
             }
             count = 0;
         }
     }
-    cout << "============== " << test_array.array_book_prog[count_prog - 1].get_name() << endl;
     input_file.close();
-    create_tree(prog_array, cook_array, esot_array, disk_array, test_array);
+    create_tree(prog_array, cook_array, esot_array, disk_array, base_object);
     return 0;
 }
 
