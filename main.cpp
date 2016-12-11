@@ -95,26 +95,6 @@ void output(int indent_a, int indent_b, bool choice, program_book OBJ, cookery_b
 
 }
 
-void output_test(int indent_a, int indent_b, bool choice, program_book OBJ, cookery_book OBJ1, esoterics_book OBJ2, int var) {
-    char str[BUF_SIZE] = "|     |", str1[BUF_SIZE] = "|";
-    if (choice == false)
-        strcpy(str, str1);
-    cout << space_f(indent_a) << str;
-    cout << space_f(indent_b) << str1 << endl;
-    cout << space_f(indent_a) << str;
-    if (var == 0) {
-        cout << space_f(indent_b) << "|--" << OBJ.get_name() << " | " << OBJ.get_param() << " | " 
-                << OBJ.get_barcode() << "   | " << OBJ.get_pages() << " | " << OBJ.get_price() << " |" << endl;
-    } else if (var == 1) {
-        cout << space_f(indent_b) << "|--" << OBJ1.get_name() << " | " << OBJ1.get_param() << " | " 
-                << OBJ1.get_barcode() << " | " << OBJ1.get_pages() << " | " << OBJ1.get_price() << " |" << endl;
-    } else if (var == 2) {
-        cout << space_f(indent_b) << "|--" << OBJ2.get_name() << " | " << OBJ2.get_param() << " | " 
-                << OBJ2.get_barcode() << " | " << OBJ2.get_pages() << " | " << OBJ2.get_price() << " |" << endl;
-    }
-
-}
-
 class disk : public product {
 	char type_disk[BUF_SIZE];
 	char content[BUF_SIZE];
@@ -129,6 +109,36 @@ class disk : public product {
 		strcpy(content, content_t);
 	}
 };
+
+struct object_struct {
+    program_book *object_program;
+    program_book array_book_prog[20];
+    cookery_book *object_cookery;
+    esoterics_book *object_esoterics;
+    disk *object_disk;
+};
+
+void output_test(int indent_a, int indent_b, bool choice, program_book testing) {
+    char str[BUF_SIZE] = "|     |", str1[BUF_SIZE] = "|";
+    if (choice == false)
+        strcpy(str, str1);
+    cout << space_f(indent_a) << str;
+    cout << space_f(indent_b) << str1 << endl;
+    cout << space_f(indent_a) << str;
+    cout << space_f(indent_b) << "|--" << testing.get_name() << " | " << testing.get_param() << " | " 
+                << testing.get_barcode() << "   | " << testing.get_pages() << " | " << testing.get_price() << " |" << endl;
+    /*if (var == 0) {
+        cout << space_f(indent_b) << "|--" << OBJ.get_name() << " | " << OBJ.get_param() << " | " 
+                << OBJ.get_barcode() << "   | " << OBJ.get_pages() << " | " << OBJ.get_price() << " |" << endl;
+    } else if (var == 1) {
+        cout << space_f(indent_b) << "|--" << OBJ1.get_name() << " | " << OBJ1.get_param() << " | " 
+                << OBJ1.get_barcode() << " | " << OBJ1.get_pages() << " | " << OBJ1.get_price() << " |" << endl;
+    } else if (var == 2) {
+        cout << space_f(indent_b) << "|--" << OBJ2.get_name() << " | " << OBJ2.get_param() << " | " 
+                << OBJ2.get_barcode() << " | " << OBJ2.get_pages() << " | " << OBJ2.get_price() << " |" << endl;
+    }*/
+
+}
 
 void print_disk_data(disk *OBJ3) {
 	cout << space_f(13) << "|--" << "Диски:" << endl;
@@ -149,19 +159,9 @@ void inform_about_branch(int indent_a, int indent_b, char *title_str, char *data
 		<< "Штрих-код | " << "Кол-во страниц | " << "Цена |" << endl;
 }
 
-struct object_struct {
-    program_book *object_program;
-    cookery_book *object_cookery;
-    esoterics_book *object_esoterics;
-    disk *object_disk;
-};
+void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, disk *OBJ3, object_struct first) {
 
-void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, disk *OBJ3) {
-
-    object_struct base_object;
-
-    base_object.object_program = OBJ;
-    cout << "+++++++++++++++" << base_object.object_program->get_name() << endl;
+    cout << "+++++++++++++++" << first.array_book_prog[count_prog - 2].get_name() << endl;
 
 	cout << "Каталог товаров:" << "\n" << space_f(13) << "|" << "\n"
 			<< space_f(13) << "|--" << "Книги:" << endl;
@@ -173,6 +173,7 @@ void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, di
 			output(13, 26, false, OBJ[i], OBJ1[i], OBJ2[i], 0);
 		} else {
 			output(13, 20, true, OBJ[i], OBJ1[i], OBJ2[i], 0);
+            output_test(13, 20, true, first.array_book_prog[i]);
 		}
 	}
 	if (count_cook == 0) {
@@ -206,6 +207,7 @@ int main() {
     int count = 0;
     char buff[BUF_SIZE][BUF_SIZE];
     ifstream input_file("input.txt");
+    object_struct test_array;
     program_book prog_array[20];
     cookery_book cook_array[20];
     esoterics_book esot_array[20];
@@ -216,6 +218,7 @@ int main() {
         if(count == 10) {
             if (strcmp(buff[4],"NONE")) {
                 prog_array[count_prog].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[4]);
+                test_array.array_book_prog[count_prog].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[4]);
                 ++count_prog;
             }
             if (strcmp(buff[5],"NONE")) {
@@ -233,8 +236,9 @@ int main() {
             count = 0;
         }
     }
+    cout << "============== " << test_array.array_book_prog[count_prog - 1].get_name() << endl;
     input_file.close();
-    create_tree(prog_array, cook_array, esot_array, disk_array);
+    create_tree(prog_array, cook_array, esot_array, disk_array, test_array);
     return 0;
 }
 
