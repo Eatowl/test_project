@@ -145,7 +145,7 @@ void inform_about_branch(int indent_a, int indent_b, char *title_str, char *data
 		<< "Штрих-код | " << "Кол-во страниц | " << "Цена |" << endl;
 }
 
-void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, disk *OBJ3, object_struct base_object) {
+void create_tree(object_struct base_object) {
 
 	cout << "Каталог товаров:" << "\n" << space_f(13) << "|" << "\n"
 			<< space_f(13) << "|--" << "Книги:" << endl;
@@ -161,7 +161,7 @@ void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, di
 	}
 	if (count_cook == 0) {
 		if (count_esot == 0)
-			print_disk_data(OBJ3);
+			print_disk_data(base_object.array_disk);
 	} else {
 		strcpy(str_title, "По кулинарии:");
 		strcpy(str_data, "Ингридиенты | ");
@@ -175,14 +175,14 @@ void create_tree(program_book *OBJ, cookery_book *OBJ1, esoterics_book *OBJ2, di
         }
     }
     if (count_esot == 0) {
-        print_disk_data(OBJ3);
+        print_disk_data(base_object.array_disk);
     } else {
         strcpy(str_title, "По эзотерике:");
         strcpy(str_data, "Возраст | ");
         inform_about_branch(13,  13, str_title, str_data);
         for (int i = 0; i < count_esot; ++i)
             output(13, 19, false, base_object, i, 2);
-        print_disk_data(OBJ3);
+        print_disk_data(base_object.array_disk);
     }
 }
 
@@ -191,31 +191,24 @@ int main() {
     char buff[BUF_SIZE][BUF_SIZE];
     ifstream input_file("input.txt");
     object_struct base_object;
-    program_book prog_array[20];
-    cookery_book cook_array[20];
-    esoterics_book esot_array[20];
-    disk disk_array[20];
+
     while (input_file.good()) {
         input_file.getline(buff[count], 50);
         ++count;
         if(count == 10) {
             if (strcmp(buff[4],"NONE")) {
-                prog_array[count_prog].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[4]);
                 base_object.array_prog[count_prog].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[4]);
                 ++count_prog;
             }
             if (strcmp(buff[5],"NONE")) {
-                cook_array[count_cook].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[5]);
                 base_object.array_cook[count_cook].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), buff[5]);
                 ++count_cook;
             }
             if (strcmp(buff[6],"NONE")) {
-                esot_array[count_esot].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), atoi(buff[6]));
                 base_object.array_esot[count_esot].set_param(buff[0], buff[1], atoi(buff[2]), atoi(buff[3]), atoi(buff[6]));
                 ++count_esot;
             }
             if (strcmp(buff[7],"NONE")) {
-                disk_array[count_disk].set_param(buff[0], buff[1], atoi(buff[2]), buff[7], buff[8]);
                 base_object.array_disk[count_disk].set_param(buff[0], buff[1], atoi(buff[2]), buff[7], buff[8]);
                 ++count_disk;
             }
@@ -223,7 +216,7 @@ int main() {
         }
     }
     input_file.close();
-    create_tree(prog_array, cook_array, esot_array, disk_array, base_object);
+    create_tree(base_object);
     return 0;
 }
 
