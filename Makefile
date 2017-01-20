@@ -1,2 +1,3 @@
 all:
-	g++ main.cpp -o run
+	g++ -Wall -o run main.cpp
+	gcc -Wall -o out main.c
