@@ -65,7 +65,10 @@ int main() {
 	printf("-> need_to_buy = %d\n", need_to_buy);
 	do {
 		pthread_t thread_loader;
-		pthread_mutex_init(&mutex, NULL);
+		if (pthread_mutex_init(&mutex, NULL) != 0) {
+			perror("pthread_mutex_init() error");
+			return 1;
+		}
 		if (pthread_create(&thread_loader, NULL, &load_stock, NULL) != 0) {
 			perror("pthread_create() error");
 			return 1;
