@@ -26,7 +26,8 @@ void * load_stock(void * arg) {
 		sleep(2);
 		int left_to_buy = 0;
 		for(int i = 0; i < MAX_BUYER; ++i) {
-			left_to_buy += buyer_param[i].bought;
+			if (buyer_param[i].buyer_need > 0)
+				left_to_buy += buyer_param[i].bought;
 		}
 		need_to_buy -= left_to_buy;
 		printf("-> need_to_buy = %d\n", need_to_buy);
@@ -78,8 +79,8 @@ int main() {
 	}
 	pthread_t thread_loader;
 	if (pthread_create(&thread_loader, NULL, &load_stock, &need_to_buy) != 0) {
-			perror("pthread_create() error");
-			return 1;
+		perror("pthread_create() error");
+		return 1;
 	}
 	pthread_t thread_buyer[MAX_BUYER];
 	for(int i = 0; i < MAX_BUYER; ++i) {
