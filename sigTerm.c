@@ -14,17 +14,14 @@ void listener(int sig) {
 int main() {
     struct sigaction sa;
     sigset_t newset;
-    signal(SIGINT, SIG_IGN);
     sigemptyset(&newset);
-    sigaddset(&newset, SIGHUP);
+    sigaddset(&newset, SIGINT);
     sigprocmask(SIG_BLOCK, &newset, 0);
     sa.sa_handler = listener;
     sigaction(SIGTERM, &sa, 0);
-
-    printf("My pid is %i\n", getpid()); // выводим pid процесса
+    printf("My pid is %i\n", getpid());
     printf("Waiting...\n");
-     
-    while(1) sleep(1);
-
+    while(1)
+        sleep(1);
     return 0;
 }
