@@ -25,13 +25,13 @@ void * load_stock(void * arg) {
 		pthread_mutex_unlock(&mutex);
 		sleep(2);
 		int left_to_buy = 0;
-		for(int i = 0; i < MAX_BUYER; ++i) {
+		for (int i = 0; i < MAX_BUYER; ++i) {
 			if (buyer_param[i].buyer_need > 0)
 				left_to_buy += buyer_param[i].bought;
 		}
 		need_to_buy -= left_to_buy;
 		printf("-> need_to_buy = %d\n", need_to_buy);
-	} while(need_to_buy > 0);
+	} while (need_to_buy > 0);
 	return 0;
 }
 
@@ -40,7 +40,7 @@ void * buy_product(void * arg) {
 	struct buyer b_param = *(struct buyer *) arg;
 	do {
 		int i = rand() % 5 + 0;
-		if(stock[i] >= buyer_param[b_param.index_buyer].buyer_need) {
+		if (stock[i] >= buyer_param[b_param.index_buyer].buyer_need) {
 			stock[i] -= buyer_param[b_param.index_buyer].buyer_need;
 			buyer_param[b_param.index_buyer].bought = buyer_param[b_param.index_buyer].buyer_need;
 			buyer_param[b_param.index_buyer].buyer_need = 0;
@@ -60,12 +60,12 @@ void * buy_product(void * arg) {
 
 int main() {
 	srand(time(NULL));
-	for(int i = 0; i <= 5; ++i) {
+	for (int i = 0; i <= 5; ++i) {
 		stock[i] = rand() % 1000 + 1000;
 		printf("stock %d product = %d\n", i, stock[i]);
 	}
 	int need_to_buy = 0;
-	for(int i = 0; i < MAX_BUYER; ++i) {
+	for (int i = 0; i < MAX_BUYER; ++i) {
 		buyer_param[i].index_buyer = i;
 		buyer_param[i].buyer_need = rand() % 1000 + 600;
 		buyer_param[i].bought = 0;
@@ -83,7 +83,7 @@ int main() {
 		return 1;
 	}
 	pthread_t thread_buyer[MAX_BUYER];
-	for(int i = 0; i < MAX_BUYER; ++i) {
+	for (int i = 0; i < MAX_BUYER; ++i) {
 		if (pthread_create(&thread_buyer[i], NULL, &buy_product, &buyer_param[i].index_buyer) != 0) {
 			perror("pthread_create() error");
 			return 1;
@@ -93,7 +93,7 @@ int main() {
 		perror("pthread_join() error");
 		return 1;
 	}
-	for(int i = 0; i < MAX_BUYER; ++i) {
+	for (int i = 0; i < MAX_BUYER; ++i) {
 		if (pthread_join(thread_buyer[i], NULL) != 0) {
 			perror("pthread_join() error");
 			return 1;
