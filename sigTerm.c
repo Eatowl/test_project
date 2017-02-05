@@ -22,6 +22,6 @@ int main() {
     printf("My pid is %i\n", getpid());
     printf("Waiting...\n");
     while(1)
-        sleep(1);
+        pause();
     return 0;
 }
